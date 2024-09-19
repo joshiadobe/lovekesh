@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LGI Web Analytics Server-side POC</title>
+        <script src="https://assets.adobedtm.com/4ca192c828d8/d7fd4db7e7ec/launch-c3833dbff3b7-development.min.js" async></script>
+ 
+  </head>
+  <body data-digitalanalytics-page-name="Triage Page">
+    <form data-digitalanalytics-form-name="Direct Term Life Insurance Application">
+	  <input type="text" id="text" name="text"
+	    data-digitalanalytics-error-message="Down with this sort of thing!"
+		data-digitalanalytics-error-type="naughty, naughty!"
+		data-digitalanalytics-question-complete="input text"
+	  />
+	  <textarea id="textarea" name="textarea" data-digitalanalytics-error-message="Careful now!"
+	    data-digitalanalytics-error-type="tut-tut"
+		data-digitalanalytics-question-complete="text area"
+	  ></textarea>
+	  <input type="radio" id="radio1" name="radio" 
+		data-digitalanalytics-question-complete="radio button"
+	  />
+	  <input type="radio" id="radio2" name="radio" 
+		data-digitalanalytics-question-complete="radio button"
+	  />
+	  <input type="checkbox" id="checkbox" name="checkbox" 
+		data-digitalanalytics-question-complete="checkbox"
+	  />
+	  <select id="select" name="select" 
+		data-digitalanalytics-question-complete="drop-down"
+	  >
+	    <option value="1">1</option>
+	    <option value="2">2</option>
+	  </select>
+	  <input type="button" id="button1" value="button" name="button1" 
+		data-digitalanalytics-page-interaction="input button"
+	  />
+	  <button id="button2" name="button2"
+		data-digitalanalytics-page-interaction="submit button"
+	  >button</button><!-- behaves like a submit button by default? -->
+	  <a href="javascript:void(0)" id="link" name="link" 
+		data-digitalanalytics-page-interaction="link"
+	  >Link</a>
+	  <a href="quote complete.html">Quote Complete</a>
+	  <a href="error page.html">Error page</a>
+	</form>
+    <script>
+      window.adobeDataLayer = window.adobeDataLayer || [];
+	  /*
+      (() => {
+	    const a = adobeDataLayer.__proto__;
+		const b = a.push;
+		a.push = function(c){
+		  if(this === adobeDataLayer) console.log(this);
+		  return b.apply(this, arguments);
+		};
+      })();
+	  */
+      window.adobeDataLayer.push({
+        event: "pageView",
+        pageViews: {
+          value: 1,
+        },
+		customer : [{
+		 marketingPreferences : {
+		   email: "Y",
+           personalisation: "Y",
+           post: "N",
+           sms: "N",
+           telephone: "N",
+		  }
+		}],
+        page: {  
+          pageName: document.querySelector("body")?.dataset?.digitalanalyticsPageName,
+          appName: "AEP POC",
+          businessArea: "L&Gretail",
+          environment: "pre-prod",// was set to "production"
+          journey: {
+            agencyNo: "2400075",
+            campaignCode: "MLD1 ABAB",
+            campaignID: Object.fromEntries(new URL(document.URL).searchParams.entries())["cid"],
+            channel: "Direct",
+            name: "Direct Term",
+            optimiseSSKey: Object.fromEntries(new URL(document.URL).searchParams.entries())["sskey"],
+            route: "New",
+            syndication: "landg",
+            type: "Direct"
+          },
+          responsiveState: "Desktop",// was set to Medium
+          pageTitle: document.querySelector("body")?.dataset?.digitalanalyticsPageName,
+          pageType: "Application",
+          siteSection: "MLFE",
+          phoneNumber : "0800 048 1241",
+        },
+        products:{
+          0: {
+		    cover: {
+			  coverType: "MLFE"
+			},
+		  }
+        },
+		serverCall: {
+		  value: 1
+		},
+      });
+	  ["text", "textarea", "radio1", "radio2", "checkbox", "select"].map(a => document.getElementById(a)?.addEventListener("change", () => window.adobeDataLayer.push({
+        event: "formFieldInteraction",
+        formFieldInteractions: {
+          value: 1,
+        },
+        form: {
+          formName: document.getElementById(a)?.closest("form").dataset.digitalanalyticsFormName,
+          formField: document.getElementById(a)?.name,
+        },
+		serverCall: {
+		  value: 1
+		},
+      })));
+	  ["button1", "button2", "link"].map(b => document.getElementById(b)?.addEventListener("click", () => window.adobeDataLayer.push({
+        event: "interactionClick",
+        interactionClicks: {
+          value: 1,
+        },
+        interaction: {
+          interactionName: document.getElementById(b)?.name,
+          interactionType: "page interaction",
+        },
+		serverCall: {
+		  value: 1
+		},
+      })));
+	  ["text", "textarea"].map(c => document.getElementById(c).addEventListener("blur", () => {
+	    const d = event.srcElement || event.target;
+		if(d.value == "") window.adobeDataLayer.push({
+          event: "formFieldError",
+          fieldErrors: {
+            value: 1,
+          },
+          form: {
+            formName: d?.closest("form").dataset.digitalanalyticsFormName,
+            formField: d?.name,
+            formErrorMessage: d?.dataset.digitalanalyticsErrorMessage, 
+            formErrorType: d?.dataset.digitalanalyticsErrorType,   
+          },
+		  serverCall: {
+		    value: 1
+		  },
+		});
+	  }));
+	  document.querySelector("form")?.addEventListener("submit", () => {
+	    event.preventDefault();
+	  });
+	</script>
+  </body>
+</html>

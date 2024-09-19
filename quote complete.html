@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LGI Web Analytics Server-side POC</title>
+	<script src="https://assets.adobedtm.com/4ca192c828d8/d7fd4db7e7ec/launch-c3833dbff3b7-development.min.js" async></script>
+ 
+  </head>
+  <body data-digitalanalytics-page-name="Quote Complete">
+    Quote Complete
+    <script>
+      window.adobeDataLayer = window.adobeDataLayer || [];
+      window.adobeDataLayer.push({
+        event: "pageView",
+        pageViews: {
+          value: 1,
+        },
+		customer : [{
+		 marketingPreferences : {
+		   email: "Y",
+           personalisation: "Y",
+           post: "N",
+           sms: "N",
+           telephone: "N",
+		  }
+		}],
+        page: {  
+          pageName: document.querySelector("body")?.dataset?.digitalanalyticsPageName,
+          appName: "AEP POC",
+          businessArea: "L&Gretail",
+          environment: "pre-prod",// was set to "production"
+          journey: {
+            agencyNo: "2400075",
+            campaignCode: "MLD1 ABAB",
+            campaignID: Object.fromEntries(new URL(document.URL).searchParams.entries())["cid"],
+            channel: "Direct",
+            name: "Direct Term",
+            optimiseSSKey: Object.fromEntries(new URL(document.URL).searchParams.entries())["sskey"],
+            route: "New",
+            syndication: "landg",
+            type: "Direct"
+          },
+          responsiveState: "Desktop",// was set to Medium
+          pageTitle: document.querySelector("body")?.dataset?.digitalanalyticsPageName,
+          pageType: "Application",
+          siteSection: "MLFE",
+          phoneNumber : "0800 048 1241",
+        },
+        products:{
+          0: {
+		    cover: {
+			  coverType: "MLFE"
+			},
+		  }
+        },
+		serverCall: {
+		  value: 1
+		},
+      });
+  </body>
+</html>
